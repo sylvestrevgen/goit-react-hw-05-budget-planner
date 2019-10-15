@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
+import { toast } from 'react-toastify';
+
 import styles from './expenseForm.module.css';
 
 export default class ExpenseForm extends Component {
@@ -18,6 +20,10 @@ export default class ExpenseForm extends Component {
   handleSubmit = e => {
     const { name, amount } = this.state;
     e.preventDefault();
+    if (!name || !amount) {
+      this.notifyAllFieldsEmpty();
+      return;
+    }
 
     const expense = {
       id: shortid.generate(),
@@ -30,44 +36,48 @@ export default class ExpenseForm extends Component {
     this.setState({ name: '', amount: 0 });
   };
 
+  notifyAllFieldsEmpty = () => toast.info('Заполните все поля');
+
   render() {
     const { name, amount } = this.state;
     return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
-        <label
-          htmlFor="expenseNameInput"
-          className={styles.label}
-          style={{ marginBottom: '16px' }}
-        >
-          Enter expense name
-          <input
-            id="expenseAmountInput"
-            type="text"
-            name="name"
-            className={styles.input}
-            value={name}
-            onChange={this.handleChange}
-          />
-        </label>
-        <label
-          htmlFor="expenseNameInput"
-          className={styles.label}
-          style={{ marginBottom: '16px' }}
-        >
-          Enter expense amount
-          <input
-            id="expenseAmountInput"
-            type="number"
-            name="amount"
-            className={styles.input}
-            value={amount}
-            onChange={this.handleChange}
-          />
-        </label>
-        <button type="submit" className={styles.button}>
-          Add
-        </button>
-      </form>
+      <>
+        <form className={styles.form} onSubmit={this.handleSubmit}>
+          <label
+            htmlFor="expenseNameInput"
+            className={styles.label}
+            style={{ marginBottom: '16px' }}
+          >
+            Enter expense name
+            <input
+              id="expenseAmountInput"
+              type="text"
+              name="name"
+              className={styles.input}
+              value={name}
+              onChange={this.handleChange}
+            />
+          </label>
+          <label
+            htmlFor="expenseNameInput"
+            className={styles.label}
+            style={{ marginBottom: '16px' }}
+          >
+            Enter expense amount
+            <input
+              id="expenseAmountInput"
+              type="number"
+              name="amount"
+              className={styles.input}
+              value={amount}
+              onChange={this.handleChange}
+            />
+          </label>
+          <button type="submit" className={styles.button}>
+            Add
+          </button>
+        </form>
+      </>
     );
   }
 }
